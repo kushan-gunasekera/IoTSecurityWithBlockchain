@@ -58,23 +58,16 @@ App = {
   },
 
   getDevice: function() {
-    console.log("getUser");
+    console.log("getDevice");
 
     App.contracts.IotSecurity.deployed().then(function(instance) {
-      return instance.user_arr_length();
+      return instance.getUsersDevices({ from: App.account });
     }).then(function(result) {
       console.log("result : " + result);
       console.log("JSON result : " + JSON.stringify(result));
-
-      if(result>0){
-        for (var i = 0; i < result; i++) {
-          getUsersOneByOne(i);
-        }
-      }
-      else{
-        console.error("No Device Found");
-      }
-
+      $('#transactionDetails').text(JSON.stringify(result));
+      $('#transactionModal').modal('show'); 
+      getDeviceArrayLength();
     }).catch(function(err) {
       console.error(err);
     });
@@ -82,7 +75,26 @@ App = {
 
 };
 
-function getUsersOneByOne(i){
+function getDeviceArrayLength(){
+  console.log("getDeviceArrayLength");
+  App.contracts.IotSecurity.deployed().then(function(instance) {
+        return instance.user_arr_length();
+      }).then(function(result) {
+        if(result>0){
+        for (var i = 0; i < result; i++) {
+          getDevicesOneByOne(i);
+        }
+      }
+      else{
+        console.log("No Devices Found");
+      }
+        console.log("JSON result : " + JSON.stringify(result));
+      }).catch(function(err) {
+        console.error(err);
+      });
+}
+
+function getDevicesOneByOne(i){
   console.log("getUsersOneByOne value : " + i);
   App.contracts.IotSecurity.deployed().then(function(instance) {
         return instance.user_arr(i);
@@ -92,7 +104,7 @@ function getUsersOneByOne(i){
         console.log("result : " + result);
         console.log("JSON result : " + JSON.stringify(result));
       }).catch(function(err) {
-        // console.error(err);
+        console.error(err);
       });
 }
 
