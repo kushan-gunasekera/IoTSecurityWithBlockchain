@@ -3,6 +3,7 @@ pragma solidity ^0.4.24;
 contract IotSecurity {
     
     address [] public user_arr;
+    uint public user_arr_length;
     string public user_permission ="Not Available";
     
     struct deviceUserInfo {
@@ -75,15 +76,14 @@ contract IotSecurity {
             permission: "Read/Write"
         });
         users[msg.sender].users_devices.push(obj);
-    }
-    
-    
-    function getUsersDevices() public returns (address []){
+        
+        // getUsersDevices()
+
         delete user_arr;
         for (uint i = 0; i < users[msg.sender].users_devices.length; i++){
             user_arr.push(users[msg.sender].users_devices[i].device);
         }
-        return user_arr;
+        user_arr_length = user_arr.length;
     }
     
 }
