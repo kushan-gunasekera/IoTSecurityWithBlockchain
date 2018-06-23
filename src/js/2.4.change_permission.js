@@ -28,7 +28,7 @@ App = {
   },
 
   initContract: function() {
-    $.getJSON("../IotSecurity.json", function(iotsecurity) {
+    $.getJSON("IotSecurity.json", function(iotsecurity) {
       // Instantiate a new truffle contract from the artifact
       App.contracts.IotSecurity = TruffleContract(iotsecurity);
       // Connect provider to interact with contract
