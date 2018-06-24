@@ -44,8 +44,10 @@ contract IotSecurity {
 
     function getUsersFromDevice (address devAddress) public {
         delete user_arr;
+        user_arr_length = 0;
         for (uint i =0 ; i < devices[devAddress].DeviceInfo.length ; i++){
             user_arr.push(devices[devAddress].DeviceInfo[i].user);
+            user_arr_length = user_arr.length;
         }
         // return user_arr;
     }
@@ -80,6 +82,7 @@ contract IotSecurity {
     
     function getUsersDevices() public {
         delete user_arr;
+        user_arr_length = 0;
         if(users[msg.sender].users_devices.length>0){
             for (uint i = 0; i < users[msg.sender].users_devices.length; i++){
                 user_arr.push(users[msg.sender].users_devices[i].device);
