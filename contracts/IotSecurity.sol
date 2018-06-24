@@ -68,6 +68,7 @@ contract IotSecurity {
     //owner can check all the users added to the device he owns
     function getUsersFromDevice (address devAddress) public owner(devAddress) returns (address[]){
         delete user_arr;
+        user_arr_length = 0;
         for (uint i = 0 ; i < devices[devAddress].DeviceInfo.length ; i++){
             user_arr.push(devices[devAddress].DeviceInfo[i].user);
             user_arr_length = user_arr.length;
@@ -100,10 +101,14 @@ contract IotSecurity {
  //check all the available devices for a given account
     function getUsersDevices() public returns (address[]){
         delete user_arr;
-        for (uint i = 0; i < users[msg.sender].users_devices.length; i++){
-            user_arr.push(users[msg.sender].users_devices[i].device);
-        }
+        user_arr_length = 0;
+        if(users[msg.sender].users_devices.length>0){
+            for (uint i = 0; i < users[msg.sender].users_devices.length; i++){
+                user_arr.push(users[msg.sender].users_devices[i].device);
+                user_arr_length = user_arr.length;
+            }
         return user_arr;
+        }
     }
     
 
@@ -138,7 +143,7 @@ contract IotSecurity {
         
             if (  keccak256(permission) == keccak256(reqPermission) ){
                 
-                = true;
+               access = true;
                 break;
             }
             access = false;
