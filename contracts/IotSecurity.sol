@@ -2,6 +2,7 @@ pragma solidity ^0.4.24;
 
 contract IotSecurity {
     
+    bool access;
     address [] public user_arr;
     uint public user_arr_length = 0;
     string public user_permission ="Not Available";
@@ -89,6 +90,20 @@ contract IotSecurity {
                 user_arr_length = user_arr.length;
             }
         }
+    }
+    
+    function verifyTransaction(string reqPermission, address deviceAddr, address userAddr) public{
+        
+        for(uint i = 0; i<devices[deviceAddr].DeviceInfo.length; i++){
+
+            string memory permission = devices[deviceAddr].DeviceInfo[i].permission;
+        
+            if (  keccak256(permission) == keccak256(reqPermission) ){
+                access = true;
+                break;
+            }
+            access = false;
+        }   
     }
     
 }
