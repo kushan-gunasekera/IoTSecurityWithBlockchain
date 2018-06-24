@@ -45,7 +45,7 @@ contract IotSecurity {
         _;
     }
     
-    owner can add users to his owned devices
+    //owner can add users to his owned devices
     function addUsersToDevice (string permission, address deviceAddress, address userAddress) public owner(deviceAddress){
         deviceUserInfo memory obj = deviceUserInfo({
             user: userAddress,
@@ -53,6 +53,13 @@ contract IotSecurity {
             permission: permission
         });
         devices[deviceAddress].DeviceInfo.push(obj);
+
+        user_info memory obj2 = user_info({
+            device: deviceAddress,
+            permission: permission
+        });
+
+        users[userAddress].users_devices.push(obj2);
     }
     
 
@@ -70,10 +77,10 @@ contract IotSecurity {
         for (uint i = 0 ; i < devices[devAddress].DeviceInfo.length ; i++){
             if (devices[devAddress].DeviceInfo[i].user == userAddress){
                 user_permission = devices[devAddress].DeviceInfo[i].permission;
-                break;
+                return user_permission;
             }
         }
-        return user_permission;
+        
     }
    
     
