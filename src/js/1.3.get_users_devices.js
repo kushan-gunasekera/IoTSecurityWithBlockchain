@@ -51,10 +51,6 @@ App = {
 
   render: function() {
 
-    return App.getDevice();
-  },
-
-  getDevice: function() {
     console.log("getDevice");
 
     App.contracts.IotSecurity.deployed().then(function(instance) {
@@ -84,6 +80,8 @@ function getDeviceArrayLength(){
       }
       else{
         console.log("No Devices Found");
+        $("#deviceAvailability").show();
+        $("#tableAvailability").hide();
       }
         console.log("JSON result : " + JSON.stringify(result));
       }).catch(function(err) {
@@ -96,8 +94,10 @@ function getDevicesOneByOne(i){
   App.contracts.IotSecurity.deployed().then(function(instance) {
         return instance.user_arr(i);
       }).then(function(result) {
-        $("option[value='NoDevices']").remove();
-        $("#deviceDropDownMenu").append('<option value="' + result + '">' + result + '</option>')
+        var count = i+1;
+        $("#deviceAvailability").hide();
+        $('#tableAvailability').append('<tr><td>' + count + '</td><td>' + result + '</td></tr>');
+        $("#tableAvailability").show();
         console.log("result : " + result);
         console.log("JSON result : " + JSON.stringify(result));
       }).catch(function(err) {
@@ -107,6 +107,7 @@ function getDevicesOneByOne(i){
 
 $(function() {
   $(window).load(function() {
+    $("#tableAvailability").hide();
     App.init();
   });
 });
