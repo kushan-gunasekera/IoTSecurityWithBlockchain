@@ -133,7 +133,7 @@ function getUsersArrayLength(){
         }
       }
       else{
-        console.log("No Devices Found");
+        console.log("No Users Found");
       }
         console.log("JSON result : " + JSON.stringify(result));
       }).catch(function(err) {
