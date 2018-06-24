@@ -75,16 +75,19 @@ App = {
     var deviceAdressToAdd = $('#deviceDropDownMenu').val();
     var userAdressToAdd = $('#userAddress').val();
 
-    App.contracts.IotSecurity.deployed().then(function(instance) {
+    if((deviceAdressToAdd != userAdressToAdd) && (userAdressToAdd != App.account)){
+      App.contracts.IotSecurity.deployed().then(function(instance) {
       return instance.addUsersToDevice(permissionToAdd, deviceAdressToAdd, userAdressToAdd);
-    }).then(function(result) {
-      console.log("NORMAL result : " + result);
-      console.log("JSON result : " + JSON.stringify(result));
-      $('#transactionDetails').text(JSON.stringify(result));
-      $('#transactionModal').modal('show'); 
-    }).catch(function(err) {
-      console.error(err);
-    });
+      }).then(function(result) {
+        $("#userAddress").val("");
+        console.log("NORMAL result : " + result);
+        console.log("JSON result : " + JSON.stringify(result));
+        $('#transactionDetails').text(JSON.stringify(result));
+        $('#transactionModal').modal('show'); 
+      }).catch(function(err) {
+        console.error(err);
+      });
+    }
   }
 };
 

@@ -60,9 +60,11 @@ App = {
     console.log("addDeviceToUser");
     var deviceAdressToAdd = $('#deviceAddress').val();
 
-    App.contracts.IotSecurity.deployed().then(function(instance) {
-      return instance.addDeviceToUser(deviceAdressToAdd, { from: App.account });
+    if(App.account != deviceAdressToAdd){
+      App.contracts.IotSecurity.deployed().then(function(instance) {
+      return instance.addOwner(deviceAdressToAdd, { from: App.account });
     }).then(function(result) {
+      $("#deviceAddress").val("");
       console.log("NORMAL result : " + result);
       console.log("JSON result : " + JSON.stringify(result));
       getJSON = JSON.stringify(result);
@@ -72,6 +74,10 @@ App = {
     }).catch(function(err) {
       console.error(err);
     });
+    }
+    else{
+      $("#deviceAddress").val("");
+    }
   }
 
 };
