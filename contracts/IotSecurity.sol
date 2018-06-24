@@ -75,7 +75,7 @@ contract IotSecurity {
     function addDeviceToUser (address devAddress) public {
         user_info memory obj = user_info({
             device: devAddress,
-            permission: "Read/Write"
+            permission: "ReadWrite"
         });
         users[msg.sender].users_devices.push(obj);
     }
