@@ -38,6 +38,7 @@ contract IotSecurity {
     modifier owner(address checkDevice){
         address checkOwner;
         checkOwner = devices[checkDevice].owner;
+        delete user_arr;
         require(msg.sender == checkOwner);
         _;
     }
@@ -98,7 +99,7 @@ contract IotSecurity {
     }
     
 
- //check all the available devices for a given account
+    //check all the available devices for a given account
     function getUsersDevices() public returns (address[]){
         delete user_arr;
         user_arr_length = 0;
@@ -110,8 +111,19 @@ contract IotSecurity {
         return user_arr;
         }
     }
-    
 
+    //check all the  devices owned by the user
+    function getOwnerDevices() public returns (address[]){
+        delete user_arr;
+        for (uint i = 0; i < users[msg.sender].users_devices.length; i++){
+            address tempDaddress = users[msg.sender].users_devices[i].device;
+            if(msg.sender == devices[tempDaddress].owner){
+                user_arr.push(tempDaddress);
+            }
+        }
+        return user_arr;
+    }
+    
     //add the owner of the device 
     function addOwner(address newDevice) public firstUser(newDevice){
         devices[newDevice].owner = msg.sender;
@@ -149,5 +161,7 @@ contract IotSecurity {
             access = false;
         }   
     }
+
+    
     
 }
