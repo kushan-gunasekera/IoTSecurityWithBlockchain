@@ -50,9 +50,6 @@ App = {
   },
 
   render: function() {
-    var securityInstance;
-    var loader = $("#loader");
-    var content = $("#content");
 
     return App.getDevice();
   },
