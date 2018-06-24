@@ -117,8 +117,10 @@ function viewPermission(){
     }).then(function(result) {
       console.log("result : " + result);
       console.log("JSON result : " + JSON.stringify(result));
-      $('#transactionDetails').text(JSON.stringify(result));
-      $('#transactionModal').modal('show'); 
+      if(result=="ReadWrite"){
+        result = "Read & Write";
+      }
+      $("#permissionAvailability").text(result).show();
     }).catch(function(err) {
       console.error(err);
     });
@@ -213,10 +215,11 @@ function getUsersForDropDownMenu(address){
 }
 
 $('#deviceDropDownMenu').change(function(){
-    if($('#deviceDropDownMenu').val() != 'NoDevices'){
-        var currentSelectedDevice = $('#deviceDropDownMenu').val();
-        getUsersForDropDownMenu(currentSelectedDevice);
-    }
+  $("#permissionAvailability").hide();
+  if($('#deviceDropDownMenu').val() != 'NoDevices'){
+      var currentSelectedDevice = $('#deviceDropDownMenu').val();
+      getUsersForDropDownMenu(currentSelectedDevice);
+  }
 });
 
 $(function() {

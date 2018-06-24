@@ -28,7 +28,7 @@ App = {
   },
 
   initContract: function() {
-    $.getJSON("IotSecurity.json", function(iotsecurity) {
+    $.getJSON("../IotSecurity.json", function(iotsecurity) {
       // Instantiate a new truffle contract from the artifact
       App.contracts.IotSecurity = TruffleContract(iotsecurity);
       // Connect provider to interact with contract
@@ -49,121 +49,39 @@ App = {
     });
   },
 
-  // Listen for events emitted from the contract
-  // listenForEvents: function() {
-  //   App.contracts.IotSecurity.deployed().then(function(instance) {
-  //     // Restart Chrome if you are unable to receive this event
-  //     // This is a known issue with Metamask
-  //     // https://github.com/MetaMask/metamask-extension/issues/2393
-  //     instance.votedEvent({}, {
-  //       fromBlock: 0,
-  //       toBlock: 'latest'
-  //     }).watch(function(error, event) {
-  //       console.log("event triggered", event)
-  //       // Reload when a new vote is recorded
-  //       App.render();
-  //     });
-  //   });
-  // },
-
   render: function() {
-    var securityInstance;
-    var loader = $("#loader");
-    var content = $("#content");
 
-    loader.show();
-    content.hide();
-
-    // Load account data
-    // web3.eth.getCoinbase(function(err, account) {
-    //   if (err === null) {
-    //     console.log("Im here");
-    //     App.account = account;
-    //     $("#accountAddress").html("Your Account: " + account);
-    //   }
-    // });
-
-    // Load contract data
-    // App.contracts.IotSecurity.deployed().then(function(instance) {
-    //   securityInstance = instance;
-    //   console.log("test123");
-    //   return securityInstance.getUsers(App.account);
-    // }).then(function(candidatesCount) {
-    //   console.log(candidatesCount);
-    //   var candidatesResults = $("#candidatesResults");
-    //   candidatesResults.empty();
-
-    //   var candidatesSelect = $('#candidatesSelect');
-    //   candidatesSelect.empty();
-
-    //   for (var i = 1; i <= candidatesCount; i++) {
-    //     securityInstance.candidates(i).then(function(candidate) {
-    //       var id = candidate[0];
-    //       var name = candidate[1];
-    //       var voteCount = candidate[2];
-
-    //       // Render candidate Result
-    //       var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
-    //       candidatesResults.append(candidateTemplate);
-
-    //       // Render candidate ballot option
-    //       var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
-    //       candidatesSelect.append(candidateOption);
-    //     });
-    //   }
-    //   return securityInstance.voters(App.account);
-    // }).then(function(hasVoted) {
-    //   // Do not allow a user to vote
-    //   if(hasVoted) {
-    //     $('form').hide();
-    //   }
-    //   loader.hide();
-    //   content.show();
-    // }).catch(function(error) {
-    //   console.warn(error);
-    // });
+    return App.getDevice();
   },
 
-  addUser: function() {
-    console.log("addUser");
-    var permissionToAdd = $('#permissionList').val();
-    var deviceAdressToAdd = $('#deviceAddressList').val();
-    var userAdressToAdd = $('#userAddressList').val();
+  getDevice: function() {
+    console.log("getDevice");
 
     App.contracts.IotSecurity.deployed().then(function(instance) {
-      return instance.addUsersToDevice(permissionToAdd, deviceAdressToAdd, userAdressToAdd);
+      return instance.getUsersDevices({ from: App.account });
     }).then(function(result) {
-      console.log("NORMAL result : " + result);
+      console.log("result : " + result);
       console.log("JSON result : " + JSON.stringify(result));
-      // Wait for votes to update
-      $("#content").hide();
-      $("#loader").show();
+      $('#transactionDetails').text(JSON.stringify(result));
+      $('#transactionModal').modal('show'); 
+      getDeviceArrayLength();
     }).catch(function(err) {
       console.error(err);
     });
   },
 
-  getUser: function() {
-    console.log("getUser");
-    var deviceAdressToGet = $('#getDeviceAddressList').val();
+  getUsers: function() {
+    console.log("getUsers");
+    var deviceAdressToAdd = $('#deviceDropDownMenu').val();
 
     App.contracts.IotSecurity.deployed().then(function(instance) {
-      // return instance.arrayLength();
-      return instance.getUsersFromDevice(deviceAdressToGet);
-      // return instance.user_arr();
+      return instance.getUsersFromDevice(deviceAdressToAdd);
     }).then(function(result) {
-      // var instanceNew;
-      // var length = result;
       console.log("result : " + result);
       console.log("JSON result : " + JSON.stringify(result));
-
-      // for (var i = 0; i < length; i++) {
-      //   getUsersOneByOne(i);
-      // }
-
-      // Wait for votes to update
-      $("#content").hide();
-      $("#loader").show();
+      $('#transactionDetails').text(JSON.stringify(result));
+      $('#transactionModal').modal('show'); 
+      getUsersArrayLength();
     }).catch(function(err) {
       console.error(err);
     });
@@ -171,59 +89,155 @@ App = {
 
   getPermission: function() {
     console.log("getPermission");
-    var getPermissionDevice = $('#permissionDevice').val();
-    var getPermissionUser = $('#permissionUser').val();
+    var deviceAdressToViewPermission = $('#deviceDropDownMenu').val();
+    var userAdressToViewPermission = $('#usersDropDownMenu').val();
 
-    App.contracts.IotSecurity.deployed().then(function(instance) {
-      return instance.getUserPermissionsForaDevice(getPermissionDevice, getPermissionUser);
-      // return instance.user_permission();
-    }).then(function(result) {
-      console.log("result : " + result);
-      console.log("JSON result : " + JSON.stringify(result));
-      // Wait for votes to update
-      $("#content").hide();
-      $("#loader").show();
-    }).catch(function(err) {
-      console.error(err);
-    });
+    if($('#deviceDropDownMenu').val()!="NoDevices" && $('#usersDropDownMenu').val()!="NoUsers"){
+      App.contracts.IotSecurity.deployed().then(function(instance) {
+        return instance.getUserPermissionsForaDevice(deviceAdressToViewPermission, userAdressToViewPermission);
+      }).then(function(result) {
+        console.log("result : " + result);
+        console.log("JSON result : " + JSON.stringify(result));
+        $('#transactionDetails').text(JSON.stringify(result));
+        $('#transactionModal').modal('show'); 
+        return viewPermission();
+      }).catch(function(err) {
+        console.error(err);
+      });
+    }
   },
 
   changePermission: function() {
-    console.log("addUser");
-    var changePermissionList = $('#changePermissionList').val();
-    var changePermissionDevice = $('#changePermissionDevice').val();
-    var changePermissionUser = $('#changePermissionUser').val();
+    console.log("getPermission");
+    var deviceAdressToChangePermission = $('#deviceDropDownMenu').val();
+    var userAdressToChangePermission = $('#usersDropDownMenu').val();
+    var permissionTochangePermission = $('#permissionDropDownMenu').val();
 
-    App.contracts.IotSecurity.deployed().then(function(instance) {
-      return instance.changePermission(changePermissionDevice, changePermissionUser, changePermissionList);
+    if($('#deviceDropDownMenu').val()!="NoDevices" && $('#usersDropDownMenu').val()!="NoUsers"){
+      App.contracts.IotSecurity.deployed().then(function(instance) {
+        return instance.changePermission(deviceAdressToChangePermission, userAdressToChangePermission, permissionTochangePermission);
+      }).then(function(result) {
+        console.log("result : " + result);
+        console.log("JSON result : " + JSON.stringify(result));
+        $('#transactionDetails').text(JSON.stringify(result));
+        $('#transactionModal').modal('show'); 
+      }).catch(function(err) {
+        console.error(err);
+      });
+    }
+  }
+
+};
+
+function viewPermission(){
+  console.log("viewPermission");
+
+  App.contracts.IotSecurity.deployed().then(function(instance) {
+      return instance.user_permission();
     }).then(function(result) {
       console.log("result : " + result);
       console.log("JSON result : " + JSON.stringify(result));
-      // Wait for votes to update
-      $("#content").hide();
-      $("#loader").show();
+      $('#transactionDetails').text(JSON.stringify(result));
+      $('#transactionModal').modal('show'); 
     }).catch(function(err) {
-      // console.error(err);
+      console.error(err);
     });
-  }
-};
+    
+}
 
-function getUsersOneByOne(i){
-  console.log("test value : " + i);
+function getDeviceArrayLength(){
+  console.log("getDeviceArrayLength");
   App.contracts.IotSecurity.deployed().then(function(instance) {
-        instanceNew = instance;
-        return instanceNew.userArray(i);
+        return instance.user_arr_length();
       }).then(function(result) {
-        console.log("result : ox" + result);
+        $("#deviceDropDownMenu").empty();
+        if(result>0){
+          for (var i = 0; i < result; i++) {
+            getDevicesOneByOne(i);
+          }
+      }
+      else{
+        console.log("No Devices Found");
+        $("#deviceDropDownMenu").append('<option value="NoUsers">No Users</option>');
+      }
         console.log("JSON result : " + JSON.stringify(result));
-        console.log("length : ");
-        // Wait for votes to update
-        $("#content").hide();
-        $("#loader").show();
       }).catch(function(err) {
-        // console.error(err);
+        console.error(err);
       });
 }
+
+function getDevicesOneByOne(i){
+  console.log("getUsersOneByOne value : " + i);
+  App.contracts.IotSecurity.deployed().then(function(instance) {
+        return instance.user_arr(i);
+      }).then(function(result) {
+        $("#deviceDropDownMenu").append('<option value="' + result + '">' + result + '</option>')
+        if(i==0){
+          getUsersForDropDownMenu($('#deviceDropDownMenu').val());
+        }
+        console.log("result : " + result);
+        console.log("JSON result : " + JSON.stringify(result));
+      }).catch(function(err) {
+        console.error(err);
+      });
+}
+
+function getUsersArrayLength(){
+  console.log("getDeviceArrayLength");
+  App.contracts.IotSecurity.deployed().then(function(instance) {
+        return instance.user_arr_length();
+      }).then(function(result) {
+        $("#usersDropDownMenu").empty();
+        if(result>0){
+          for (var i = 0; i < result; i++) {
+            getUsersOneByOne(i);
+          }
+      }
+      else{
+        console.log("No Users Found");
+        $("#usersDropDownMenu").append('<option value="NoUsers">No Users</option>');
+      }
+        console.log("JSON result : " + JSON.stringify(result));
+      }).catch(function(err) {
+        console.error(err);
+      });
+}
+
+function getUsersOneByOne(i){
+  console.log("getUsersOneByOne value : " + i);
+  App.contracts.IotSecurity.deployed().then(function(instance) {
+        return instance.user_arr(i);
+      }).then(function(result) {
+        $("#usersDropDownMenu").append('<option value="' + result + '">' + result + '</option>')
+        console.log("result : " + result);
+        console.log("JSON result : " + JSON.stringify(result));
+      }).catch(function(err) {
+        console.error(err);
+      });
+}
+
+function getUsersForDropDownMenu(address){
+  console.log("getUsers");
+
+  App.contracts.IotSecurity.deployed().then(function(instance) {
+    return instance.getUsersFromDevice(address);
+  }).then(function(result) {
+    console.log("result : " + result);
+    console.log("JSON result : " + JSON.stringify(result));
+    $('#transactionDetails').text(JSON.stringify(result));
+    $('#transactionModal').modal('show'); 
+    getUsersArrayLength();
+  }).catch(function(err) {
+    console.error(err);
+  });
+}
+
+$('#deviceDropDownMenu').change(function(){
+    if($('#deviceDropDownMenu').val() != 'NoDevices'){
+        var currentSelectedDevice = $('#deviceDropDownMenu').val();
+        getUsersForDropDownMenu(currentSelectedDevice);
+    }
+});
 
 $(function() {
   $(window).load(function() {

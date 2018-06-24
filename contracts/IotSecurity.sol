@@ -2,7 +2,10 @@ pragma solidity ^0.4.24;
 
 contract IotSecurity {
     
-    address[] public user_arr;
+
+    bool access;
+    address [] public user_arr;
+    uint public user_arr_length = 0;
     string public user_permission ="Not Available";
 
     struct deviceUserInfo {
@@ -93,6 +96,7 @@ contract IotSecurity {
         }
     }
     
+
  //check all the available devices for a given account
     function getUsersDevices() public returns (address[]){
         delete user_arr;
@@ -124,6 +128,21 @@ contract IotSecurity {
     //view the owner of the device
     function viewOwner(address deviceAddr) public view returns (address){
         return (devices[deviceAddr].owner);
+    }
+    
+    function verifyTransaction(string reqPermission, address deviceAddr, address userAddr) public{
+        
+        for(uint i = 0; i<devices[deviceAddr].DeviceInfo.length; i++){
+
+            string memory permission = devices[deviceAddr].DeviceInfo[i].permission;
+        
+            if (  keccak256(permission) == keccak256(reqPermission) ){
+                
+                = true;
+                break;
+            }
+            access = false;
+        }   
     }
     
 }

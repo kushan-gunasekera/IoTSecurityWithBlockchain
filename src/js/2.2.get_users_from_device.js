@@ -51,10 +51,6 @@ App = {
 
   render: function() {
 
-    return App.getDevice();
-  },
-
-  getDevice: function() {
     console.log("getDevice");
 
     App.contracts.IotSecurity.deployed().then(function(instance) {
@@ -68,6 +64,7 @@ App = {
     }).catch(function(err) {
       console.error(err);
     });
+
   },
 
   getUsers: function() {
@@ -95,9 +92,9 @@ function getDeviceArrayLength(){
         return instance.user_arr_length();
       }).then(function(result) {
         if(result>0){
-        for (var i = 0; i < result; i++) {
-          getDevicesOneByOne(i);
-        }
+          for (var i = 0; i < result; i++) {
+            getDevicesOneByOne(i);
+          }
       }
       else{
         console.log("No Devices Found");
@@ -128,12 +125,14 @@ function getUsersArrayLength(){
         return instance.user_arr_length();
       }).then(function(result) {
         if(result>0){
-        for (var i = 0; i < result; i++) {
-          getUsersOneByOne(i);
+          $('#tableAvailability').empty();
+          for (var i = 0; i < result; i++) {
+            getUsersOneByOne(i);
+          }
         }
-      }
       else{
         console.log("No Users Found");
+        $("#userAvailability").show();
       }
         console.log("JSON result : " + JSON.stringify(result));
       }).catch(function(err) {
@@ -146,8 +145,12 @@ function getUsersOneByOne(i){
   App.contracts.IotSecurity.deployed().then(function(instance) {
         return instance.user_arr(i);
       }).then(function(result) {
+        var count = i+1;
         // $("option[value='NoDevices']").remove();
         // $("#deviceDropDownMenu").append('<option value="' + result + '">' + result + '</option>')
+        $("#userAvailability").hide();
+        $('#tableAvailability').append('<tr><td>' + count + '</td><td>' + result + '</td></tr>');
+        $("#tableAvailability").show();
         console.log("result : " + result);
         console.log("JSON result : " + JSON.stringify(result));
       }).catch(function(err) {
