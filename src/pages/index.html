@@ -37,6 +37,45 @@
 
 <body>
 
+    <!-- Modal -->
+    <div class="modal fade" id="transactionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="exampleModalLabel" align="center">Transaction Details</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <pre id="transactionDetails">
+    {  
+       "tx":"0xb65c5cd15394fe4576861616fbd2a2e028484eff1e65430adf9cbf0ed6a7b2f8",
+       "receipt":{  
+          "transactionHash":"0xb65c5cd15394fe4576861616fbd2a2e028484eff1e65430adf9cbf0ed6a7b2f8",
+          "transactionIndex":0,
+          "blockHash":"0xcb9d2f62af3a6d2479e986ad5b19a6f97f82e576321bcaa23b074b4abf28909b",
+          "blockNumber":7,
+          "gasUsed":69473,
+          "cumulativeGasUsed":69473,
+          "contractAddress":null,
+          "logs":[  
+
+          ],
+          "status":"0x01",
+          "logsBloom":"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+       },
+       "logs":[  
+
+       ]
+    }</pre>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 <div id="wrapper">
 
     <!-- Navigation -->
@@ -153,12 +192,11 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-info-circle"></i> Account Info</h3>
+                        <h3 class="panel-title"><i class="fa fa-info-circle"></i> Account Information</h3>
                     </div>
                     <div class="panel-body">
-                        <h3>Account ID: sdifsdufgusdfu
-                            <br/>
-                            <small>USD: 345</small>
+                        <h3 id="accountID">Account ID: </h3><h3>
+                            <small id="accountPrice">Account Value: </small>
                         </h3>
                     </div>
                 </div>
@@ -273,8 +311,8 @@
 </div>
 <!-- /#wrapper -->
 
-<!-- jQuery -->
-<script src="../vendor/jquery/jquery.min.js"></script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -282,20 +320,14 @@
 <!-- Metis Menu Plugin JavaScript -->
 <script src="../vendor/metisMenu/metisMenu.min.js"></script>
 
-<!-- Morris Charts JavaScript -->
-<script src="../vendor/raphael/raphael.min.js"></script>
-<script src="../vendor/morrisjs/morris.min.js"></script>
-<script src="../data/morris-data.js"></script>
-
 <!-- Custom Theme JavaScript -->
 <script src="../dist/js/sb-admin-2.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    
+<!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="../js/web3.min.js"></script>
 <script src="../js/truffle-contract.js"></script>
-<script src="../js/app.js"></script>
+<!-- <script src="../js/1.2.add_device_to_user.js"></script> -->
+<script src="../js/dashboard.js"></script>
 
 </body>
 
