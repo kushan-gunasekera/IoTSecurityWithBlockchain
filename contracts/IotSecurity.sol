@@ -52,14 +52,14 @@ contract IotSecurity {
         // return user_arr;
     }
     
-    function getUserPermissionsForaDevice (address devAddress, address userAddress) public returns (string){
+    function getUserPermissionsForaDevice (address devAddress, address userAddress) public {
+        user_permission ="Not Available";
         for (uint i =0 ; i < devices[devAddress].DeviceInfo.length ; i++){
             if (devices[devAddress].DeviceInfo[i].user == userAddress){
                 user_permission = devices[devAddress].DeviceInfo[i].permission;
                 break;
             }
         }
-        return user_permission;
     }
     
     function changePermission (address devAddress, address userAddress, string permission) public {
