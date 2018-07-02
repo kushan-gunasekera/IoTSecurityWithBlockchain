@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 contract IotSecurity {
     
-
+	string public readData;
     bool access;
     address [] public user_arr;
     uint public user_arr_length = 0;
@@ -146,7 +146,40 @@ contract IotSecurity {
     function viewOwner(address deviceAddr) public view returns (address){
         return (devices[deviceAddr].owner);
     }
+	
+	//send data to a device
+	function sendData(address deviceAddr, string data){
+        for (uint i = 0 ; i < devices[deviceAddr].DeviceInfo.length ; i++){
+            address devUser = devices[deviceAddr].DeviceInfo[i].user;
+            string memory permission = devices[deviceAddr].DeviceInfo[i].permission;
+            if(devUser == msg.sender && (keccak256(permission) == keccak256("write") || keccak256(permission) == keccak256("all"))){
+                devices[deviceAddr].DeviceInfo[i].data = data;
+                break;
+            }
+        }
+    }
     
+	// get data from a device
+    function getData(address deviceAddr, address user) returns (string){
+        string memory permission;
+        for (uint i = 0 ; i < devices[deviceAddr].DeviceInfo.length ; i++){
+           if(devices[deviceAddr].DeviceInfo[i].user == msg.sender ){
+                permission = devices[deviceAddr].DeviceInfo[i].permission;
+                break;
+            } 
+        }
+        for (uint j = 0 ; j < devices[deviceAddr].DeviceInfo.length ; j++){
+            //address memory devUser = devices[deviceAddr].DeviceInfo[i].user;
+            
+            if(devices[deviceAddr].DeviceInfo[j].user == user && (keccak256(permission) == keccak256("read") || keccak256(permission) == keccak256("all"))){
+                readData = devices[deviceAddr].DeviceInfo[j].data;
+                break;
+            } 
+        }
+        return readData;
+    }
+    
+	//verify a transaction
     function verifyTransaction(string reqPermission, address deviceAddr, address userAddr) public{
         
         for(uint i = 0; i<devices[deviceAddr].DeviceInfo.length; i++){
